@@ -1,0 +1,149 @@
+@model ProjectManagementSystem.Models.ViewModels.UserCreateViewModel
+@{
+    ViewBag.Title = "Create New User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 shadow-sm border-0">
+            <h4 class="fw-bold mb-4 pb-2 border-bottom"><i class="bi bi-person-plus me-2 text-primary"></i>Create New User</h4>
+
+            @using (Html.BeginForm("Create", "Users", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.FirstName, new { @class = "form-label fw-semibold" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "" })
+                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger small" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.LastName, new { @class = "form-label fw-semibold" })
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "" })
+                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger small" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.Email, new { @class = "form-label fw-semibold" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "user@company.com" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+            </div>
+            <div class="mb-3">
+
+                @Html.LabelFor(
+                        m => m.Password,
+                        new
+                        {
+                            @class = "form-label-custom"
+                        })
+
+                <div class="input-group login-input-group">
+
+                    <span class="input-group-text border-end-0">
+                        <i class="bi bi-lock"></i>
+                    </span>
+
+                    @Html.PasswordFor(
+                             m => m.Password,
+                             new
+                             {
+                                 @class = "form-control border-start-0 border-end-0",
+                                 id = "PasswordInput",
+                                 placeholder = "Enter your password",
+                                 autocomplete = "current-password"
+                             })
+
+                    <button type="button"
+                            class="btn password-toggle border-start-0"
+                            id="togglePassword"
+                            title="Show password">
+
+                        <i class="bi bi-eye" id="passwordIcon"></i>
+
+                    </button>
+
+                </div>
+
+                @Html.ValidationMessageFor(
+                        m => m.Password,
+                        "",
+                        new
+                        {
+                            @class = "text-danger small"
+                        })
+
+            </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.RoleName, new { @class = "form-label fw-semibold" })
+                    @Html.DropDownListFor(m => m.RoleName, Model.RoleList, "-- Select Role --", new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.RoleName, "", new { @class = "text-danger small" })
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.DepartmentId, new { @class = "form-label fw-semibold" })
+                    @Html.DropDownListFor(m => m.DepartmentId, Model.DepartmentList, "-- Select Department --", new { @class = "form-select" })
+                </div>
+
+                <div class="col-12 mt-4 d-flex justify-content-between">
+                    <a href="@Url.Action("Index", "Users")" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4"><i class="bi bi-check-lg me-1"></i> Create User</button>
+                </div>
+            </div>
+                }
+            </div>
+    </div>
+</div>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const passwordInput =
+            document.getElementById("PasswordInput");
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+        const passwordIcon =
+            document.getElementById("passwordIcon");
+
+
+        if (passwordInput &&
+            togglePassword &&
+            passwordIcon) {
+
+            togglePassword.addEventListener("click", function () {
+
+                const isHidden =
+                    passwordInput.type === "password";
+
+
+                passwordInput.type =
+                    isHidden ? "text" : "password";
+
+
+                passwordIcon.classList.toggle(
+                    "bi-eye",
+                    !isHidden
+                );
+
+                passwordIcon.classList.toggle(
+                    "bi-eye-slash",
+                    isHidden
+                );
+
+
+                togglePassword.setAttribute(
+                    "title",
+                    isHidden
+                        ? "Hide password"
+                        : "Show password"
+                );
+
+            });
+
+        }
+
+    });
+
+</script>

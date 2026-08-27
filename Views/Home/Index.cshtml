@@ -1,0 +1,349 @@
+﻿@{
+    ViewBag.Title = "Project Management System";
+}
+
+<!-- Hero Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+
+            <!-- Left Content -->
+            <div class="col-lg-7">
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">
+                    <i class="bi bi-kanban me-1"></i>
+                    Project Management System
+                </span>
+
+                <h1 class="display-4 fw-bold text-dark mb-3">
+                    Manage Your Projects.
+                    <span class="text-primary">Work Smarter.</span>
+                </h1>
+
+                <p class="lead text-muted mb-4">
+                    Plan projects, manage your team, assign tasks, track progress,
+                    and keep everything organized in one powerful platform.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                    <a href="@Url.Action("Login", "Account")"
+                       class="btn btn-primary btn-lg rounded-pill px-4">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Login
+                    </a>
+
+                    <a href="#features"
+                       class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+                        Explore Features
+                        <i class="bi bi-arrow-down ms-2"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Right Illustration -->
+            <div class="col-lg-5 mt-5 mt-lg-0">
+
+                <div class="card border-0 shadow-lg rounded-4 p-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <small class="text-muted">Current Project</small>
+                            <h5 class="fw-bold mb-0">Website Development</h5>
+                        </div>
+
+                        <span class="badge bg-success rounded-pill">
+                            Active
+                        </span>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small text-muted">Project Progress</span>
+                            <span class="small fw-bold text-primary">75%</span>
+                        </div>
+
+                        <div class="progress" style="height: 9px;">
+                            <div class="progress-bar bg-primary"
+                                 style="width:75%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="row g-3">
+
+                        <div class="col-4">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <i class="bi bi-list-task text-primary fs-4"></i>
+                                <div class="fw-bold mt-1">24</div>
+                                <small class="text-muted">Tasks</small>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <i class="bi bi-people text-success fs-4"></i>
+                                <div class="fw-bold mt-1">8</div>
+                                <small class="text-muted">Members</small>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <i class="bi bi-check-circle text-info fs-4"></i>
+                                <div class="fw-bold mt-1">18</div>
+                                <small class="text-muted">Done</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Features -->
+<section id="features" class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="text-primary fw-semibold">
+                POWERFUL FEATURES
+            </span>
+
+            <h2 class="fw-bold mt-2">
+                Everything You Need to Manage Projects
+            </h2>
+
+            <p class="text-muted">
+                Keep your projects, tasks, and team members organized in one place.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Projects -->
+            <div class="col-md-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+
+                    <div class="bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center mb-3"
+                         style="width:55px;height:55px;">
+                        <i class="bi bi-kanban fs-4"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Project Management
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Create and manage projects with deadlines, departments,
+                        project managers, status, and progress tracking.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Tasks -->
+            <div class="col-md-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+
+                    <div class="bg-success-subtle text-success rounded-3 d-flex align-items-center justify-content-center mb-3"
+                         style="width:55px;height:55px;">
+                        <i class="bi bi-check2-square fs-4"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Task Management
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Assign tasks to team members, set priorities and deadlines,
+                        and track task progress and completion.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Team -->
+            <div class="col-md-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+
+                    <div class="bg-info-subtle text-info rounded-3 d-flex align-items-center justify-content-center mb-3"
+                         style="width:55px;height:55px;">
+                        <i class="bi bi-people fs-4"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Team Collaboration
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Manage team members, assign responsibilities, and keep
+                        everyone connected with project activities.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Progress -->
+            <div class="col-md-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+
+                    <div class="bg-warning-subtle text-warning rounded-3 d-flex align-items-center justify-content-center mb-3"
+                         style="width:55px;height:55px;">
+                        <i class="bi bi-graph-up-arrow fs-4"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Progress Tracking
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Monitor project and task progress with clear percentages,
+                        statuses, and deadlines.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Priorities -->
+            <div class="col-md-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+
+                    <div class="bg-danger-subtle text-danger rounded-3 d-flex align-items-center justify-content-center mb-3"
+                         style="width:55px;height:55px;">
+                        <i class="bi bi-exclamation-triangle fs-4"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Task Priorities
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Identify critical and high-priority work so your team
+                        can focus on what matters most.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Security -->
+            <div class="col-md-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+
+                    <div class="bg-secondary-subtle text-secondary rounded-3 d-flex align-items-center justify-content-center mb-3"
+                         style="width:55px;height:55px;">
+                        <i class="bi bi-shield-check fs-4"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Secure Access
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Role-based access helps administrators, project managers,
+                        and team members access the features they need.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Call To Action -->
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+
+            <h2 class="fw-bold">
+                Ready to Manage Your Projects?
+            </h2>
+
+            <p class="text-muted mb-4">
+                Sign in and start managing your projects and team today.
+            </p>
+
+            <div>
+                <a href="@Url.Action("Login", "Account")"
+                   class="btn btn-primary btn-lg rounded-pill px-5">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    Login to Your Account
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Footer Navigation -->
+<footer class="border-top py-4 mt-4">
+
+    <div class="container">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+
+            <div class="text-muted small">
+                &copy; @DateTime.Now.Year Project Management System.
+                All rights reserved.
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <a href="@Url.Action("About", "Home")"
+                   class="btn btn-outline-secondary btn-sm rounded-pill px-4">
+                    <i class="bi bi-info-circle me-1"></i>
+                    About
+                </a>
+
+                <a href="@Url.Action("Contact", "Home")"
+                   class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                    <i class="bi bi-envelope me-1"></i>
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>

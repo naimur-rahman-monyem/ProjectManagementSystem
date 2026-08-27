@@ -1,0 +1,197 @@
+@model ProjectManagementSystem.Models.ViewModels.TaskDetailsViewModel
+@{
+    ViewBag.Title = "Task - " + Model.Task.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Top Header Bar -->
+<div class="card card-custom p-4 mb-4 border-0 shadow-sm">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge @(Model.Task.Status == ProjectManagementSystem.Models.Enums.TaskStatus.Completed ? "bg-success" : Model.Task.Status == ProjectManagementSystem.Models.Enums.TaskStatus.InProgress ? "bg-info text-dark" : "bg-warning text-dark") fs-6">
+                    @Model.Task.Status
+                </span>
+                <span class="badge @(Model.Task.Priority == ProjectManagementSystem.Models.Enums.TaskPriority.Critical ? "bg-danger" : "bg-secondary")">
+                    Priority: @Model.Task.Priority
+                </span>
+                @if (Model.IsOverdue)
+                {
+                    <span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i> OVERDUE</span>
+                }
+            </div>
+            <h3 class="fw-bold text-dark mb-1">@Model.Task.Title</h3>
+            <p class="text-muted small mb-0"><i class="bi bi-folder me-1"></i> Project: <a href="@Url.Action("Details", "Projects", new { id = Model.Task.ProjectId })" class="fw-semibold text-primary">@(Model.Task.Project != null ? Model.Task.Project.Name : "No Project")</a></p>
+        </div>
+
+        <div class="d-flex gap-2">
+            @if (Model.CanUpdateStatus)
+            {
+                <button type="button" class="btn btn-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#updateStatusModal">
+                    <i class="bi bi-arrow-repeat me-1"></i> Update Status / Progress
+                </button>
+            }
+            @if (Model.CanEditTask)
+            {
+                <a href="@Url.Action("Edit", "Tasks", new { id = Model.Task.TaskItemId })" class="btn btn-outline-secondary rounded-pill px-3"><i class="bi bi-pencil me-1"></i> Edit Task</a>
+            }
+        </div>
+    </div>
+
+    <div class="p-3 bg-light rounded-3 mb-3">
+        <h6 class="fw-bold text-secondary mb-2">Description</h6>
+        <p class="mb-0 text-dark" style="white-space: pre-line;">@(string.IsNullOrEmpty(Model.Task.Description) ? "No detailed description provided." : Model.Task.Description)</p>
+    </div>
+
+    <div class="row g-3 text-center border-top pt-3">
+        <div class="col-md-3">
+            <small class="text-muted d-block">Assigned To</small>
+            <strong class="text-dark"><i class="bi bi-person me-1"></i>@(Model.Task.AssignedToUser != null ? $"{Model.Task.AssignedToUser.FirstName} {Model.Task.AssignedToUser.LastName}" : "Unassigned")</strong>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted d-block">Created By</small>
+            <strong class="text-dark">@(Model.Task.CreatedByUser != null ? $"{Model.Task.CreatedByUser.FirstName} {Model.Task.CreatedByUser.LastName}" : "System")</strong>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted d-block">Deadline</small>
+            <strong class="@(Model.IsOverdue ? "text-danger" : "text-dark")">@Model.Task.DueDate.ToString("yyyy-MM-dd")</strong>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted d-block">Progress</small>
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <div class="progress flex-grow-1 progress-bar-custom bg-secondary bg-opacity-20" style="max-width: 100px;">
+                    <div class="progress-bar bg-primary" style="width: @Model.Task.ProgressPercentage%;"></div>
+                </div>
+                <strong class="text-primary">@Model.Task.ProgressPercentage%</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Grid: Comments & Attachments -->
+<div class="row g-4">
+    <!-- Comments Section -->
+    <div class="col-lg-7">
+        <div class="card card-custom p-4 shadow-sm h-100">
+            <h5 class="fw-bold mb-3"><i class="bi bi-chat-left-text me-2 text-primary"></i>Task Comments & Discussion</h5>
+
+            <!-- Add Comment Input -->
+            @using (Html.BeginForm("AddComment", "Tasks", FormMethod.Post, new { @class = "mb-4" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="taskItemId" value="@Model.Task.TaskItemId" />
+                <div class="mb-2">
+                    <textarea name="commentText" class="form-control" rows="3" placeholder="Add a comment or update work progress..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3"><i class="bi bi-send me-1"></i> Post Comment</button>
+            }
+
+            <!-- Comment Feed -->
+            <div class="list-group list-group-flush">
+                @if (Model.Comments.Any())
+                {
+                    foreach (var c in Model.Comments)
+                    {
+                        <div class="list-group-item px-0 py-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-semibold text-dark"><i class="bi bi-person-circle text-primary me-1"></i>@(c.User != null ? $"{c.User.FirstName} {c.User.LastName}" : "User")</span>
+                                <small class="text-muted extra-small">@c.CreatedDate.ToString("g")</small>
+                            </div>
+                            <p class="mb-0 text-secondary small" style="white-space: pre-line;">@c.CommentText</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted extra-small">No comments posted yet.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Attachments Section -->
+    <div class="col-lg-5">
+        <div class="card card-custom p-4 shadow-sm h-100">
+            <h5 class="fw-bold mb-3"><i class="bi bi-paperclip me-2 text-primary"></i>Task Files & Documents</h5>
+
+            <!-- Upload Form -->
+            @using (Html.BeginForm("UploadFile", "Tasks", FormMethod.Post, new { enctype = "multipart/form-data", @class = "mb-4 p-3 bg-light rounded-3" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="taskItemId" value="@Model.Task.TaskItemId" />
+                <div class="mb-2">
+                    <label class="form-label fw-semibold small text-secondary">Upload Attachment</label>
+                    <input type="file" name="uploadedFile" class="form-control form-control-sm" required />
+                </div>
+                <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill px-3 w-100"><i class="bi bi-upload me-1"></i> Upload File</button>
+            }
+
+            <!-- File List -->
+            <div class="list-group list-group-flush">
+                @if (Model.Files.Any())
+                {
+                    foreach (var f in Model.Files)
+                    {
+                        <div class="list-group-item px-0 py-2.5 d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2 overflow-hidden me-2">
+                                <i class="bi bi-file-earmark-arrow-down fs-4 text-primary"></i>
+                                <div class="text-truncate">
+                                    <div class="fw-semibold small text-truncate">@f.OriginalFileName</div>
+                                    <small class="text-muted extra-small">Uploaded by @(f.UploadedByUser?.FirstName ?? "User") | @(f.FileSize / 1024) KB</small>
+                                </div>
+                            </div>
+                            <a href="@f.FilePath" target="_blank" class="btn btn-light btn-sm rounded-circle"><i class="bi bi-download"></i></a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted extra-small">No files attached to this task.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Update Status & Progress -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-arrow-repeat me-2 text-primary"></i>Update Task Status & Progress</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Html.BeginForm("UpdateStatusProgress", "Tasks", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="TaskItemId" value="@Model.Task.TaskItemId" />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Task Status</label>
+                        <select name="Status" class="form-select">
+                            <option value="1" @(Model.Task.Status == ProjectManagementSystem.Models.Enums.TaskStatus.Pending ? "selected" : "")>Pending</option>
+                            <option value="2" @(Model.Task.Status == ProjectManagementSystem.Models.Enums.TaskStatus.InProgress ? "selected" : "")>In Progress</option>
+                            <option value="3" @(Model.Task.Status == ProjectManagementSystem.Models.Enums.TaskStatus.Blocked ? "selected" : "")>Blocked</option>
+                            <option value="4" @(Model.Task.Status == ProjectManagementSystem.Models.Enums.TaskStatus.Completed ? "selected" : "")>Completed</option>
+                            <option value="5" @(Model.Task.Status == ProjectManagementSystem.Models.Enums.TaskStatus.Cancelled ? "selected" : "")>Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Progress Percentage (0 - 100%)</label>
+                        <input type="number" name="ProgressPercentage" class="form-control" value="@Model.Task.ProgressPercentage" min="0" max="100" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Update Note / Comment (Optional)</label>
+                        <textarea name="Comment" class="form-control" rows="2" placeholder="Brief notes on progress..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Save Changes</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

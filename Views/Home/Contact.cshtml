@@ -1,0 +1,367 @@
+﻿@{
+    ViewBag.Title = "Contact Us";
+}
+
+<main>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    }
+    <!-- Contact Header -->
+    <section class="py-5">
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">
+                    <i class="bi bi-envelope me-1"></i>
+                    Get In Touch
+                </span>
+
+                <h1 class="display-5 fw-bold text-dark">
+                    Contact Us
+                </h1>
+
+                <p class="lead text-muted mx-auto" style="max-width:700px;">
+                    Have a question, need support, or want to learn more about
+                    our Project Management System? We're here to help.
+                </p>
+
+            </div>
+
+
+            <div class="row g-4">
+
+                <!-- Contact Information -->
+                <div class="col-lg-5">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+
+                        <h4 class="fw-bold mb-4">
+                            Contact Information
+                        </h4>
+
+                        <!-- Address -->
+                        <div class="d-flex gap-3 mb-4">
+
+                            <div class="bg-primary-subtle text-primary rounded-3
+                                        d-flex align-items-center justify-content-center flex-shrink-0"
+                                 style="width:45px;height:45px;">
+                                <i class="bi bi-geo-alt fs-5"></i>
+                            </div>
+
+                            <div>
+                                <h6 class="fw-bold mb-1">Office</h6>
+                                <p class="text-muted small mb-0">
+                                   
+                                    Dhaka, Bangladesh
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Phone -->
+                        <div class="d-flex gap-3 mb-4">
+
+                            <div class="bg-success-subtle text-success rounded-3
+                                        d-flex align-items-center justify-content-center flex-shrink-0"
+                                 style="width:45px;height:45px;">
+                                <i class="bi bi-telephone fs-5"></i>
+                            </div>
+
+                            <div>
+                                <h6 class="fw-bold mb-1">Phone</h6>
+                                <p class="text-muted small mb-0">
+                                    +880 1601887741
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="d-flex gap-3 mb-4">
+
+                            <div class="bg-info-subtle text-info rounded-3
+                                        d-flex align-items-center justify-content-center flex-shrink-0"
+                                 style="width:45px;height:45px;">
+                                <i class="bi bi-envelope fs-5"></i>
+                            </div>
+
+                            <div>
+                                <h6 class="fw-bold mb-1">Email</h6>
+
+                                <p class="small mb-0">
+                                    <a href="mailto:support@projectmanagement.com"
+                                       class="text-decoration-none">
+                                        naimurrohan204@gmail.com
+                                    </a>
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Working Hours -->
+                        <div class="d-flex gap-3">
+
+                            <div class="bg-warning-subtle text-warning rounded-3
+                                        d-flex align-items-center justify-content-center flex-shrink-0"
+                                 style="width:45px;height:45px;">
+                                <i class="bi bi-clock fs-5"></i>
+                            </div>
+
+                            <div>
+                                <h6 class="fw-bold mb-1">Working Hours</h6>
+
+                                <p class="text-muted small mb-0">
+                                    Sunday - Thursday<br />
+                                    9:00 AM - 5:00 PM
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Contact Form -->
+                <div class="col-lg-7">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+
+                        <h4 class="fw-bold mb-4">
+                            Send Us a Message
+                        </h4>
+
+                        @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="row g-3">
+
+                                <!-- Name -->
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Your Name
+                                    </label>
+
+                                    <input type="text"
+                                           name="Name"
+                                           class="form-control"
+                                           placeholder="Enter your name"
+                                           required />
+
+                                </div>
+
+
+                                <!-- Email -->
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Email Address
+                                    </label>
+
+                                    <input type="email"
+                                           name="Email"
+                                           class="form-control"
+                                           placeholder="Enter your email"
+                                           required />
+
+                                </div>
+
+
+                                <!-- Subject -->
+                                <div class="col-12">
+
+                                    <label class="form-label fw-semibold">
+                                        Subject
+                                    </label>
+
+                                    <input type="text"
+                                           name="Subject"
+                                           class="form-control"
+                                           placeholder="What is your message about?"
+                                           required />
+
+                                </div>
+
+
+                                <!-- Message -->
+                                <div class="col-12">
+
+                                    <label class="form-label fw-semibold">
+                                        Message
+                                    </label>
+
+                                    <textarea name="Message"
+                                              class="form-control"
+                                              rows="6"
+                                              placeholder="Write your message here..."
+                                              required></textarea>
+
+                                </div>
+
+
+                                <!-- Submit -->
+                                <div class="col-12">
+
+                                    <button type="submit"
+                                            class="btn btn-primary rounded-pill px-4">
+
+                                        <i class="bi bi-send me-2"></i>
+                                        Send Message
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- FAQ / Support -->
+    <section class="py-5 bg-light">
+
+        <div class="container">
+
+            <div class="text-center mb-4">
+
+                <h3 class="fw-bold">
+                    Need Help?
+                </h3>
+
+                <p class="text-muted">
+                    Our support team is ready to assist you with the system.
+                </p>
+
+            </div>
+
+            <div class="row justify-content-center">
+
+                <div class="col-md-4">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+
+                        <div class="bg-primary-subtle text-primary rounded-circle
+                                    d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+                             style="width:55px;height:55px;">
+
+                            <i class="bi bi-headset fs-4"></i>
+
+                        </div>
+
+                        <h5 class="fw-bold">
+                            Technical Support
+                        </h5>
+
+                        <p class="text-muted small">
+                            Need help using the system? Contact our support team.
+                        </p>
+
+                        <a href="mailto:support@projectmanagement.com"
+                           class="btn btn-outline-primary btn-sm rounded-pill">
+                            Contact Support
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 mt-3 mt-md-0">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+
+                        <div class="bg-success-subtle text-success rounded-circle
+                                    d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+                             style="width:55px;height:55px;">
+
+                            <i class="bi bi-question-circle fs-4"></i>
+
+                        </div>
+
+                        <h5 class="fw-bold">
+                            General Questions
+                        </h5>
+
+                        <p class="text-muted small">
+                            Have questions about projects, tasks, or team management?
+                        </p>
+
+                        <a href="mailto:support@projectmanagement.com"
+                           class="btn btn-outline-success btn-sm rounded-pill">
+                            Ask a Question
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Back / Login -->
+    <section class="py-4">
+
+        <div class="container text-center">
+
+            <a href="@Url.Action("Index", "Home")"
+               class="btn btn-outline-secondary rounded-pill px-4">
+
+                <i class="bi bi-house me-1"></i>
+                Back to Home
+
+            </a>
+
+            <a href="@Url.Action("Login", "Account")"
+               class="btn btn-primary rounded-pill px-4 ms-2">
+
+                <i class="bi bi-box-arrow-in-right me-1"></i>
+                Login
+
+            </a>
+
+        </div>
+
+    </section>
+
+</main>

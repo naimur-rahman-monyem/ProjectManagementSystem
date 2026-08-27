@@ -1,0 +1,243 @@
+@model ProjectManagementSystem.Models.ViewModels.ProjectDetailsViewModel
+@{
+    ViewBag.Title = "Project Details - " + Model.Project.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header -->
+<div class="card card-custom p-4 mb-4 border-0 shadow-sm">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge @(Model.Project.Status == ProjectManagementSystem.Models.Enums.ProjectStatus.Active ? "bg-success" : "bg-primary") fs-6">
+                    @Model.Project.Status
+                </span>
+                <span class="text-muted small"><i class="bi bi-building me-1"></i>@(Model.Project.Department?.Name ?? "General Department")</span>
+            </div>
+            <h2 class="fw-bold text-dark mb-2">@Model.Project.Name</h2>
+            <p class="text-muted mb-0">@Model.Project.Description</p>
+        </div>
+
+        <div class="d-flex gap-2">
+            @if (Model.CanEditProject)
+            {
+                <a href="@Url.Action("Edit", "Projects", new { id = Model.Project.ProjectId })" class="btn btn-outline-secondary rounded-pill px-3"><i class="bi bi-pencil me-1"></i> Edit Project</a>
+            }
+            @if (Model.CanManageMembers)
+            {
+                <a href="@Url.Action("ManageMembers", "Projects", new { id = Model.Project.ProjectId })" class="btn btn-outline-primary rounded-pill px-3"><i class="bi bi-people me-1"></i> Team Members</a>
+            }
+            @if (Model.CanCreateTask)
+            {
+                <a href="@Url.Action("Create", "Tasks", new { projectId = Model.Project.ProjectId })" class="btn btn-primary rounded-pill px-3"><i class="bi bi-plus-circle me-1"></i> Add Task</a>
+            }
+        </div>
+    </div>
+
+    <hr class="my-3">
+
+    <div class="row g-3 text-center">
+        <div class="col-md-3">
+            <small class="text-muted d-block">Project Manager</small>
+            <strong class="text-dark"><i class="bi bi-person-badge me-1"></i>@(Model.Project.ProjectManager != null ? $"{Model.Project.ProjectManager.FirstName} {Model.Project.ProjectManager.LastName}" : "Unassigned")</strong>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted d-block">Start Date</small>
+            <strong class="text-dark">@Model.Project.StartDate.ToString("yyyy-MM-dd")</strong>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted d-block">Target End Date</small>
+            <strong class="text-dark">@(Model.Project.EndDate.HasValue ? Model.Project.EndDate.Value.ToString("yyyy-MM-dd") : "Ongoing")</strong>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted d-block">Overall Progress</small>
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <div class="progress flex-grow-1 progress-bar-custom bg-light" style="max-width: 100px;">
+                    <div class="progress-bar bg-success" style="width: @Model.Project.ProgressPercentage%;"></div>
+                </div>
+                <strong class="text-success">@Model.Project.ProgressPercentage%</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Tasks Column -->
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold m-0"><i class="bi bi-check2-square me-2 text-primary"></i>Project Tasks (@Model.Tasks.Count)</h5>
+                @if (Model.CanCreateTask)
+                {
+                    <a href="@Url.Action("Create", "Tasks", new { projectId = Model.Project.ProjectId })" class="btn btn-sm btn-light text-primary fw-semibold"><i class="bi bi-plus-lg me-1"></i> New Task</a>
+                }
+            </div>
+
+            @if (Model.Tasks.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Task Title</th>
+                                <th>Assignee</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Deadline</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.Tasks)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("Details", "Tasks", new { id = t.TaskItemId })" class="fw-semibold text-dark text-decoration-none">@t.Title</a>
+                                    </td>
+                                    <td><small class="text-secondary">
+    @{
+        var assigneeName = t.AssignedToUser != null
+            ? (t.AssignedToUser.FirstName + " " + t.AssignedToUser.LastName).Trim()
+            : "Unassigned";
+                                    }
+
+                                    @assigneeName
+                                </small></td>
+                                    <td>
+                                        <span class="badge @(t.Priority == ProjectManagementSystem.Models.Enums.TaskPriority.Critical ? "bg-danger" : t.Priority == ProjectManagementSystem.Models.Enums.TaskPriority.High ? "bg-warning text-dark" : "bg-secondary")">
+                                            @t.Priority
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(t.Status == ProjectManagementSystem.Models.Enums.TaskStatus.Completed ? "bg-success" : t.Status == ProjectManagementSystem.Models.Enums.TaskStatus.InProgress ? "bg-info text-dark" : "bg-light text-dark border")">
+                                            @t.Status
+                                        </span>
+                                    </td>
+                                    <td><small class="@(t.DueDate < DateTime.Now && t.Status != ProjectManagementSystem.Models.Enums.TaskStatus.Completed ? "text-danger fw-bold" : "text-muted")">@t.DueDate.ToString("yyyy-MM-dd")</small></td>
+                                    <td>
+                                        <a href="@Url.Action("Details", "Tasks", new { id = t.TaskItemId })" class="btn btn-light btn-sm rounded-circle"><i class="bi bi-arrow-right-short fs-5"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4 text-muted">No tasks created yet for this project.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Team Members Column -->
+    <!-- Team Members Column -->
+    <div class="col-lg-4">
+        <div class="card card-custom p-4 shadow-sm">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold m-0">
+                    <i class="bi bi-people me-2 text-primary"></i>
+                    Team Members
+                </h5>
+
+                @if (Model.CanManageMembers)
+                {
+                    <a href="@Url.Action("ManageMembers", "Projects", new { id = Model.Project.ProjectId })"
+                       class="btn btn-sm btn-light text-primary fw-semibold">
+                        <i class="bi bi-gear me-1"></i> Manage
+                    </a>
+                }
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                @foreach (var member in Model.Members)
+                {
+                    <div class="list-group-item px-0 py-3">
+
+                        <!-- Member information -->
+                        <div class="d-flex align-items-center gap-2">
+
+                            <div class="avatar-icon bg-light rounded-circle text-primary fw-bold d-flex align-items-center justify-content-center"
+                                 style="width:36px;height:36px;">
+                                @(member.User != null &&
+          !string.IsNullOrEmpty(member.User.FirstName)
+            ? member.User.FirstName.Substring(0, 1)
+            : "U")
+                            </div>
+
+                            <div class="fw-semibold small">
+                                @{
+                                    var firstName = member.User != null ? member.User.FirstName : "";
+                                    var lastName = member.User != null ? member.User.LastName : "";
+                                    var email = member.User != null ? member.User.Email : "";
+                                    var fullName = (firstName + " " + lastName).Trim();
+                                }
+
+                                <div class="fw-semibold small">
+                                    @fullName
+                                </div>
+
+                                <div class="extra-small text-muted">
+                                    @email
+                                </div>
+                            </div>
+
+                        </div>
+
+                        @{
+                            var memberTasks = Model.Tasks
+                                .Where(task => task.AssignedToUserId == member.UserId)
+                                .ToList();
+                        }
+
+                        <!-- Member tasks -->
+                        <div class="mt-3 ms-5">
+
+                            <div class="small fw-semibold text-secondary mb-2">
+                                <i class="bi bi-list-task me-1"></i>
+                                Tasks (@memberTasks.Count)
+                            </div>
+
+                            @if (memberTasks.Any())
+                            {
+                                foreach (var task in memberTasks)
+                                {
+                                    <div class="border-start ps-2 mb-2">
+
+                                        <div class="small fw-semibold">
+                                            @task.Title
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-2 mt-1">
+
+                                            <span class="badge bg-light text-dark border">
+                                                @task.Status
+                                            </span>
+
+                                            <span class="extra-small text-muted">
+                                                @task.ProgressPercentage%
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="extra-small text-muted">
+                                    No tasks assigned.
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

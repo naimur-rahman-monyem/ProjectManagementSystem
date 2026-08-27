@@ -1,0 +1,94 @@
+@model IEnumerable<ProjectManagementSystem.Models.TaskItem>
+@{
+    ViewBag.Title = "Tasks Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h4 class="fw-bold m-0">
+            <i class="bi bi-check2-square me-2 text-primary"></i>
+            @(ViewBag.ProjectName != null ? $"Tasks for {ViewBag.ProjectName}" : "All Tasks")
+        </h4>
+        <p class="text-muted small m-0">Task assignments, status progress, and deadlines</p>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+        {
+            <a href="@Url.Action("Create", "Tasks", new { projectId = ViewBag.ProjectId })" class="btn btn-primary btn-sm rounded-pill px-3 fw-semibold"><i class="bi bi-plus-circle me-1"></i> Create Task</a>
+        }
+    </div>
+</div>
+
+<div class="card card-custom p-4 shadow-sm border-0">
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Task Title</th>
+                        <th>Project</th>
+                        <th>Assigned To</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Deadline</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model)
+                    {
+                        bool isOverdue = t.DueDate < DateTime.Now && t.Status != ProjectManagementSystem.Models.Enums.TaskStatus.Completed && t.Status != ProjectManagementSystem.Models.Enums.TaskStatus.Cancelled;
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("Details", "Tasks", new { id = t.TaskItemId })" class="fw-semibold text-dark text-decoration-none">@t.Title</a>
+                            </td>
+                            <td><small class="text-secondary">@(t.Project != null ? t.Project.Name : "No Project")</small></td>
+                            <td><small class="text-dark">@(t.AssignedToUser != null ? $"{t.AssignedToUser.FirstName} {t.AssignedToUser.LastName}" : "Unassigned")</small></td>
+                            <td>
+                                <span class="badge @(t.Priority == ProjectManagementSystem.Models.Enums.TaskPriority.Critical ? "bg-danger" : t.Priority == ProjectManagementSystem.Models.Enums.TaskPriority.High ? "bg-warning text-dark" : "bg-secondary")">
+                                    @t.Priority
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(t.Status == ProjectManagementSystem.Models.Enums.TaskStatus.Completed ? "bg-success" : t.Status == ProjectManagementSystem.Models.Enums.TaskStatus.InProgress ? "bg-info text-dark" : "bg-light text-dark border")">
+                                    @t.Status
+                                </span>
+                            </td>
+                            <td style="width: 120px;">
+                                <div class="d-flex align-items-center gap-1">
+                                    <div class="progress flex-grow-1 progress-bar-custom bg-light">
+                                        <div class="progress-bar bg-primary" style="width: @t.ProgressPercentage%;"></div>
+                                    </div>
+                                    <small class="extra-small fw-semibold text-muted">@t.ProgressPercentage%</small>
+                                </div>
+                            </td>
+                            <td>
+                                <small class="@(isOverdue ? "text-danger fw-bold" : "text-muted")">
+                                    @if (isOverdue)
+                                    {
+                                        <i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>
+                                    }
+                                    @t.DueDate.ToString("yyyy-MM-dd")
+                                </small>
+                            </td>
+                            <td class="text-end">
+                                <a href="@Url.Action("Details", "Tasks", new { id = t.TaskItemId })" class="btn btn-light btn-sm rounded-circle"><i class="bi bi-arrow-right-short fs-5"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-4 text-muted">
+            <i class="bi bi-check2-circle fs-1 opacity-50 d-block mb-2"></i>
+            No tasks found.
+        </div>
+    }
+</div>

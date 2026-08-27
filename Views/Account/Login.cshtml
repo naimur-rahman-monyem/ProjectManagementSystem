@@ -1,0 +1,729 @@
+@model ProjectManagementSystem.Models.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Sign In";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .login-page {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 15px;
+        background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15), transparent 30%), radial-gradient(circle at 90% 80%, rgba(79, 70, 229, 0.12), transparent 30%), #f8f9fc;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 1050px;
+        min-height: 600px;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        background: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 25px 70px rgba(31, 41, 55, 0.14);
+    }
+
+    /* LEFT SIDE */
+
+    .login-brand-section {
+        position: relative;
+        overflow: hidden;
+        padding: 55px;
+        color: white;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 55%, #3730a3 100%);
+    }
+
+        .login-brand-section::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            top: -100px;
+            right: -80px;
+        }
+
+        .login-brand-section::after {
+            content: "";
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            bottom: -120px;
+            left: -100px;
+        }
+
+    .brand-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .brand-logo {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.2);
+        font-size: 28px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    .brand-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 18px;
+    }
+
+    .brand-description {
+        color: rgba(255,255,255,0.82);
+        font-size: 1rem;
+        line-height: 1.7;
+        max-width: 420px;
+    }
+
+    .feature-list {
+        margin-top: 40px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+        color: rgba(255,255,255,0.92);
+    }
+
+    .feature-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.13);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    /* FLOATING CARDS */
+
+    .floating-card {
+        position: absolute;
+        z-index: 2;
+        background: rgba(255,255,255,0.96);
+        color: #1f2937;
+        border-radius: 14px;
+        padding: 14px 16px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        font-size: 12px;
+    }
+
+    .task-card {
+        right: 35px;
+        bottom: 55px;
+        width: 190px;
+    }
+
+    .progress-card {
+        right: 120px;
+        bottom: 155px;
+        width: 165px;
+    }
+
+    .mini-progress {
+        height: 6px;
+        border-radius: 10px;
+        background: #e5e7eb;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .mini-progress-bar {
+        height: 100%;
+        width: 75%;
+        background: #6366f1;
+        border-radius: 10px;
+    }
+
+    /* RIGHT SIDE */
+
+    .login-form-section {
+        padding: 55px 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-form {
+        width: 100%;
+        max-width: 380px;
+    }
+
+    .login-heading {
+        margin-bottom: 30px;
+    }
+
+        .login-heading h2 {
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .login-heading p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+    .form-label-custom {
+        font-size: 13px;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 7px;
+    }
+
+    .login-input-group {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .login-input-group .input-group-text {
+            background: #f8fafc;
+            border-color: #e5e7eb;
+            color: #6b7280;
+            padding-left: 14px;
+        }
+
+        .login-input-group .form-control {
+            background: #f8fafc;
+            border-color: #e5e7eb;
+            height: 48px;
+            box-shadow: none;
+        }
+
+            .login-input-group .form-control:focus {
+                background: #fff;
+                border-color: #6366f1;
+                box-shadow: 0 0 0 3px rgba(99,102,241,0.10);
+            }
+
+    .password-toggle {
+        height: 48px;
+        background: #f8fafc;
+        border-color: #e5e7eb;
+        color: #6b7280;
+    }
+
+        .password-toggle:hover {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+    .login-button {
+        height: 50px;
+        border: none;
+        border-radius: 11px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        box-shadow: 0 8px 20px rgba(79,70,229,0.25);
+        transition: all .2s ease;
+    }
+
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 25px rgba(79,70,229,0.32);
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+        }
+
+    .register-link {
+        color: #4f46e5;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+    .security-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #9ca3af;
+        font-size: 12px;
+        margin-top: 25px;
+    }
+
+    /* RESPONSIVE */
+
+    @@media (max-width: 850px) {
+
+        .login-wrapper {
+            grid-template-columns: 1fr;
+            max-width: 500px;
+        }
+
+        .login-brand-section {
+            padding: 40px;
+            min-height: 340px;
+        }
+
+        .brand-title {
+            font-size: 2rem;
+        }
+
+        .feature-list {
+            margin-top: 25px;
+        }
+
+        .floating-card {
+            display: none;
+        }
+
+        .login-form-section {
+            padding: 45px 35px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+
+        .login-page {
+            padding: 20px 10px;
+        }
+
+        .login-brand-section {
+            padding: 30px 25px;
+        }
+
+        .login-form-section {
+            padding: 35px 22px;
+        }
+
+        .brand-title {
+            font-size: 1.75rem;
+        }
+
+        .feature-list {
+            display: none;
+        }
+    }
+</style>
+
+
+<div class="login-page">
+
+    <div class="login-wrapper">
+
+        <!-- ===================================== -->
+        <!-- LEFT BRANDING SECTION -->
+        <!-- ===================================== -->
+
+        <div class="login-brand-section">
+
+            <div class="brand-content">
+
+                <div class="brand-logo">
+                    <i class="bi bi-kanban"></i>
+                </div>
+
+                <h1 class="brand-title">
+                    Manage Projects.<br />
+                    Deliver Better.
+                </h1>
+
+                <p class="brand-description">
+                    A centralized project and task management platform
+                    designed to help teams organize work, track progress,
+                    and achieve their goals.
+                </p>
+
+
+                <div class="feature-list">
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="bi bi-kanban"></i>
+                        </div>
+
+                        <div>
+                            <strong>Project Management</strong>
+                            <div class="small opacity-75">
+                                Manage projects from one place
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="bi bi-check2-square"></i>
+                        </div>
+
+                        <div>
+                            <strong>Task Tracking</strong>
+                            <div class="small opacity-75">
+                                Track tasks and deadlines easily
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                        <div>
+                            <strong>Team Collaboration</strong>
+                            <div class="small opacity-75">
+                                Work together with your team
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Floating Progress Card -->
+
+            <div class="floating-card progress-card">
+
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-semibold">
+                        Project Progress
+                    </span>
+
+                    <span class="text-primary fw-bold">
+                        75%
+                    </span>
+                </div>
+
+                <div class="mini-progress">
+                    <div class="mini-progress-bar"></div>
+                </div>
+
+            </div>
+
+
+            <!-- Floating Task Card -->
+
+            <div class="floating-card task-card">
+
+                <div class="d-flex align-items-center gap-2 mb-2">
+
+                    <div class="rounded-circle bg-success-subtle
+                                text-success d-flex align-items-center
+                                justify-content-center"
+                         style="width:30px;height:30px;">
+
+                        <i class="bi bi-check-lg"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="fw-semibold">
+                            Task Completed
+                        </div>
+
+                        <div class="text-muted">
+                            Website Development
+                        </div>
+                    </div>
+
+                </div>
+
+                <span class="badge bg-success-subtle text-success">
+                    Completed
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- LOGIN FORM SECTION -->
+        <!-- ===================================== -->
+
+        <div class="login-form-section">
+
+            <div class="login-form">
+
+                <div class="login-heading">
+
+                    <h2>
+                        Welcome Back
+                    </h2>
+
+                    <p class="mb-0">
+                        Sign in to continue to your account.
+                    </p>
+
+                </div>
+
+
+                @using (Html.BeginForm(
+                    "Login",
+                    "Account",
+                    new { ReturnUrl = ViewBag.ReturnUrl },
+                    FormMethod.Post,
+                    new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(
+                        true,
+                        "",
+                        new
+                        {
+                            @class = "alert alert-danger p-2 small border-0 mb-3"
+                        })
+
+
+                    <!-- EMAIL -->
+
+                    <div class="mb-3">
+
+                        @Html.LabelFor(
+                            m => m.Email,
+                            new
+                            {
+                                @class = "form-label-custom"
+                            })
+
+                        <div class="input-group login-input-group">
+
+                            <span class="input-group-text border-end-0">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+
+                            @Html.TextBoxFor(
+                                m => m.Email,
+                                new
+                                {
+                                    @class = "form-control border-start-0",
+                                    id = "EmailInput",
+                                    placeholder = "name@company.com",
+                                    autocomplete = "email"
+                                })
+
+                        </div>
+
+                        @Html.ValidationMessageFor(
+                            m => m.Email,
+                            "",
+                            new
+                            {
+                                @class = "text-danger small"
+                            })
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="mb-3">
+
+                        @Html.LabelFor(
+                            m => m.Password,
+                            new
+                            {
+                                @class = "form-label-custom"
+                            })
+
+                        <div class="input-group login-input-group">
+
+                            <span class="input-group-text border-end-0">
+                                <i class="bi bi-lock"></i>
+                            </span>
+
+                            @Html.PasswordFor(
+                                m => m.Password,
+                                new
+                                {
+                                    @class = "form-control border-start-0 border-end-0",
+                                    id = "PasswordInput",
+                                    placeholder = "Enter your password",
+                                    autocomplete = "current-password"
+                                })
+
+                            <button type="button"
+                                    class="btn password-toggle border-start-0"
+                                    id="togglePassword"
+                                    title="Show password">
+
+                                <i class="bi bi-eye"
+                                   id="passwordIcon"></i>
+
+                            </button>
+
+                        </div>
+
+                        @Html.ValidationMessageFor(
+                            m => m.Password,
+                            "",
+                            new
+                            {
+                                @class = "text-danger small"
+                            })
+
+                    </div>
+
+
+                    <!-- REMEMBER ME -->
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-4">
+
+                        <div class="form-check">
+
+                            @Html.CheckBoxFor(
+                                m => m.RememberMe,
+                                new
+                                {
+                                    @class = "form-check-input"
+                                })
+
+                            @Html.LabelFor(
+                                m => m.RememberMe,
+                                new
+                                {
+                                    @class = "form-check-label small text-muted"
+                                })
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LOGIN BUTTON -->
+
+                    <button type="submit"
+                            class="btn btn-primary login-button w-100">
+
+                        Sign In
+
+                        <i class="bi bi-arrow-right ms-1"></i>
+
+                    </button>
+
+                }
+
+
+                <!-- REGISTER -->
+
+                <div class="text-center mt-4">
+
+                    <span class="text-muted small">
+                        Don't have an account?
+                    </span>
+
+                    <a href="@Url.Action("Register", "Account")"
+                       class="register-link small ms-1">
+
+                        Create an account
+
+                    </a>
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="security-note">
+
+                    <i class="bi bi-shield-check"></i>
+
+                    Secure role-based authentication
+
+                </div>
+                <div  class="text-center mt-4">
+                    <a href="@Url.Action("Index", "Home")"
+                       class="btn btn-outline-primary rounded-pill px-4 btn-sm">
+
+                        <i class="bi bi-house-door me-1"></i>
+                        Back to Home
+
+                    </a>
+                </div>
+              
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===================================== -->
+<!-- SHOW / HIDE PASSWORD -->
+<!-- ===================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const passwordInput =
+            document.getElementById("PasswordInput");
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+        const passwordIcon =
+            document.getElementById("passwordIcon");
+
+
+        if (passwordInput &&
+            togglePassword &&
+            passwordIcon) {
+
+            togglePassword.addEventListener("click", function () {
+
+                const isHidden =
+                    passwordInput.type === "password";
+
+
+                passwordInput.type =
+                    isHidden ? "text" : "password";
+
+
+                passwordIcon.classList.toggle(
+                    "bi-eye",
+                    !isHidden
+                );
+
+                passwordIcon.classList.toggle(
+                    "bi-eye-slash",
+                    isHidden
+                );
+
+
+                togglePassword.setAttribute(
+                    "title",
+                    isHidden
+                        ? "Hide password"
+                        : "Show password"
+                );
+
+            });
+
+        }
+
+    });
+
+</script>

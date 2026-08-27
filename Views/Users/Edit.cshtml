@@ -1,0 +1,58 @@
+@model ProjectManagementSystem.Models.ViewModels.UserEditViewModel
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 shadow-sm border-0">
+            <h4 class="fw-bold mb-4 pb-2 border-bottom"><i class="bi bi-pencil-square me-2 text-primary"></i>Edit User</h4>
+
+            @using (Html.BeginForm("Edit", "Users", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                @Html.HiddenFor(m => m.Id)
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.LastName, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Email, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control bg-light", @readonly = "readonly" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.RoleName, new { @class = "form-label fw-semibold" })
+                        @Html.DropDownListFor(m => m.RoleName, Model.RoleList, new { @class = "form-select" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.DepartmentId, new { @class = "form-label fw-semibold" })
+                        @Html.DropDownListFor(m => m.DepartmentId, Model.DepartmentList, "-- Select Department --", new { @class = "form-select" })
+                    </div>
+                    <div class="col-md-6 align-self-end">
+                        <div class="form-check form-switch mb-2">
+                            @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                            @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label fw-semibold" })
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.NewPassword, new { @class = "form-label fw-semibold" })
+                        @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", placeholder = "Leave empty to keep existing password" })
+                    </div>
+
+                    <div class="col-12 mt-4 d-flex justify-content-between">
+                        <a href="@Url.Action("Index", "Users")" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4"><i class="bi bi-save me-1"></i> Update User</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

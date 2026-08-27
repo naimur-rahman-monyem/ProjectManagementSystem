@@ -1,0 +1,130 @@
+@model ProjectManagementSystem.Models.ViewModels.SystemSettingsViewModel
+@{
+    ViewBag.Title = "System Settings & Logs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row g-4">
+    <!-- System Settings Tab Card -->
+    <div class="col-lg-6">
+        <div class="card card-custom p-4 shadow-sm border-0 h-100">
+            <h5 class="fw-bold mb-3"><i class="bi bi-sliders me-2 text-primary"></i>Global Application Settings</h5>
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.Settings)
+                        {
+                            <tr>
+                                <td>
+                                    <strong class="text-dark">@s.SettingKey</strong>
+                                    <div class="text-muted extra-small">@s.Description</div>
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("UpdateSetting", "SystemSettings", FormMethod.Post, new { id = "settingForm_" + s.SystemSettingId, @class = "d-flex gap-2" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="systemSettingId" value="@s.SystemSettingId" />
+                                        <input type="text" name="settingValue" value="@s.SettingValue" class="form-control form-control-sm" />
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <button type="submit" form="settingForm_@s.SystemSettingId" class="btn btn-primary btn-sm rounded-circle" title="Save"><i class="bi bi-save"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Logs -->
+    <div class="col-lg-6">
+        <div class="card card-custom p-4 shadow-sm border-0 h-100">
+            <h5 class="fw-bold mb-3"><i class="bi bi-envelope-paper me-2 text-primary"></i>Recent Email / Mail Logs</h5>
+
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-sm table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Recipient</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentEmailLogs.Any())
+                        {
+                            foreach (var e in Model.RecentEmailLogs)
+                            {
+                                <tr>
+                                    <td><small class="fw-semibold">@e.RecipientEmail</small></td>
+                                    <td><small class="text-truncate d-inline-block" style="max-width: 180px;">@e.Subject</small></td>
+                                    <td>
+                                        <span class="badge @(e.Status == "Sent" ? "bg-success" : e.Status == "Queued" ? "bg-warning text-dark" : "bg-danger") extra-small">
+                                            @e.Status
+                                        </span>
+                                    </td>
+                                    <td><small class="text-muted extra-small">@e.CreatedDate.ToString("MM-dd HH:mm")</small></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="4" class="text-center text-muted extra-small py-3">No email logs recorded yet.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Logs -->
+    <div class="col-12">
+        <div class="card card-custom p-4 shadow-sm border-0">
+            <h5 class="fw-bold mb-3"><i class="bi bi-shield-check me-2 text-primary"></i>Audit Trail Logs</h5>
+
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-sm table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Action</th>
+                            <th>User</th>
+                            <th>Entity Type</th>
+                            <th>Details / New Value</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentAuditLogs.Any())
+                        {
+                            foreach (var a in Model.RecentAuditLogs)
+                            {
+                                <tr>
+                                    <td><span class="badge bg-primary-subtle text-primary border rounded-pill px-2">@a.Action</span></td>
+                                    <td><small class="fw-semibold">@(a.User != null ? a.User.Email : "System")</small></td>
+                                    <td><small class="text-secondary">@a.EntityType</small></td>
+                                    <td><small class="text-dark">@a.NewValue</small></td>
+                                    <td><small class="text-muted extra-small">@a.CreatedDate.ToString("g")</small></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="5" class="text-center text-muted extra-small py-3">No audit logs recorded yet.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

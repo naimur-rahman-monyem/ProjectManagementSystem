@@ -1,0 +1,72 @@
+@model IEnumerable<ProjectManagementSystem.Models.Project>
+@{
+    ViewBag.Title = "Projects Directory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h4 class="fw-bold m-0"><i class="bi bi-folder-check me-2 text-primary"></i>Projects</h4>
+        <p class="text-muted small m-0">System projects, assignment statuses, and progress tracking</p>
+    </div>
+    
+    <div class="d-flex gap-2">
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle rounded-pill px-3" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-filter me-1"></i> Filter Status
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-menu-item dropdown-item" href="@Url.Action("Index", "Projects")">All Projects</a></li>
+                <li><a class="dropdown-menu-item dropdown-item" href="@Url.Action("Index", "Projects", new { statusFilter = ProjectManagementSystem.Models.Enums.ProjectStatus.Active })">Active</a></li>
+                <li><a class="dropdown-menu-item dropdown-item" href="@Url.Action("Index", "Projects", new { statusFilter = ProjectManagementSystem.Models.Enums.ProjectStatus.Planning })">Planning</a></li>
+                <li><a class="dropdown-menu-item dropdown-item" href="@Url.Action("Index", "Projects", new { statusFilter = ProjectManagementSystem.Models.Enums.ProjectStatus.Completed })">Completed</a></li>
+            </ul>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a href="@Url.Action("Create", "Projects")" class="btn btn-primary btn-sm rounded-pill px-3 fw-semibold"><i class="bi bi-plus-circle me-1"></i> Create Project</a>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    @foreach (var p in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-custom p-4 h-100 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="badge @(p.Status == ProjectManagementSystem.Models.Enums.ProjectStatus.Active ? "bg-success" : p.Status == ProjectManagementSystem.Models.Enums.ProjectStatus.Completed ? "bg-primary" : "bg-warning") text-uppercase">
+                        @p.Status
+                    </span>
+                    <small class="text-muted"><i class="bi bi-calendar me-1"></i>@p.StartDate.ToString("MMM yyyy")</small>
+                </div>
+
+                <h5 class="fw-bold mb-1">
+                    <a href="@Url.Action("Details", "Projects", new { id = p.ProjectId })" class="text-dark text-decoration-none hvr-primary">@p.Name</a>
+                </h5>
+                <p class="text-muted small mb-3 text-truncate-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    @(string.IsNullOrEmpty(p.Description) ? "No description provided." : p.Description)
+                </p>
+
+                <div class="mt-auto">
+                    <div class="d-flex justify-content-between align-items-center mb-1 extra-small text-secondary">
+                        <span>Progress</span>
+                        <span class="fw-bold">@p.ProgressPercentage%</span>
+                    </div>
+                    <div class="progress progress-bar-custom bg-light mb-3">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: @p.ProgressPercentage%;"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center border-top pt-3 extra-small text-muted">
+                        <div>
+                            <i class="bi bi-person-badge me-1"></i>
+                            PM: <strong class="text-dark">@(p.ProjectManager != null ? $"{p.ProjectManager.FirstName} {p.ProjectManager.LastName}" : "Unassigned")</strong>
+                        </div>
+                        <a href="@Url.Action("Details", "Projects", new { id = p.ProjectId })" class="btn btn-outline-primary btn-sm rounded-pill px-3">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,70 @@
+@model ProjectManagementSystem.Models.ViewModels.ProjectFormViewModel
+@{
+    ViewBag.Title = "Edit Project - " + Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 shadow-sm border-0">
+            <h4 class="fw-bold mb-4 pb-2 border-bottom"><i class="bi bi-pencil-square me-2 text-primary"></i>Edit Project</h4>
+
+            @using (Html.BeginForm("Edit", "Projects", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                @Html.HiddenFor(m => m.ProjectId)
+
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.Name, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-12">
+                        @Html.LabelFor(m => m.Description, new { @class = "form-label fw-semibold" })
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4 })
+                    </div>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.ProjectManagerId, new { @class = "form-label fw-semibold" })
+                            @Html.DropDownListFor(m => m.ProjectManagerId, Model.ProjectManagerList, new { @class = "form-select" })
+                        </div>
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.DepartmentId, new { @class = "form-label fw-semibold" })
+                            @Html.DropDownListFor(m => m.DepartmentId, Model.DepartmentList, "-- Select Department --", new { @class = "form-select" })
+                        </div>
+                    }
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.StartDate, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.EndDate, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Status, new { @class = "form-label fw-semibold" })
+                        @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-select" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.ProgressPercentage, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.ProgressPercentage, new { @class = "form-control", type = "number", min = "0", max = "100" })
+                    </div>
+
+                    <div class="col-12 mt-4 d-flex justify-content-between">
+                        <a href="@Url.Action("Details", "Projects", new { id = Model.ProjectId })" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4"><i class="bi bi-save me-1"></i> Update Project</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

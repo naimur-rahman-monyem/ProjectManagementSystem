@@ -1,0 +1,287 @@
+@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Project & Task Management System</title>
+    <!-- Google Fonts Inter & Bootstrap 5 & Bootstrap Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pms-primary: #4f46e5;
+            --pms-primary-hover: #4338ca;
+            --pms-sidebar-bg: #0f172a;
+            --pms-sidebar-hover: #1e293b;
+            --pms-bg: #f8fafc;
+            --pms-card-bg: #ffffff;
+            --pms-text-main: #1e293b;
+            --pms-text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--pms-bg);
+            color: var(--pms-text-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .pms-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .pms-sidebar {
+            width: 260px;
+            background-color: var(--pms-sidebar-bg);
+            color: #94a3b8;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .pms-sidebar .brand-header {
+            padding: 1.5rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.15rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .pms-sidebar .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .pms-sidebar .nav-group-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #475569;
+            padding: 1.25rem 1.25rem 0.5rem 1.25rem;
+            font-weight: 600;
+        }
+
+        .pms-sidebar .nav-link {
+            color: #94a3b8;
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            font-size: 0.92rem;
+            border-radius: 8px;
+            margin: 0.15rem 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .pms-sidebar .nav-link:hover, .pms-sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: var(--pms-sidebar-hover);
+        }
+
+        .pms-sidebar .nav-link.active {
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.2), transparent);
+            color: #818cf8;
+            border-left: 3px solid #6366f1;
+        }
+
+        .pms-sidebar .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Container */
+        .pms-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        /* Top Header */
+        .pms-topbar {
+            height: 64px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .role-badge-admin { background-color: #fee2e2; color: #dc2626; }
+        .role-badge-pm { background-color: #e0e7ff; color: #4338ca; }
+        .role-badge-user { background-color: #dcfce7; color: #166534; }
+
+        .pms-content {
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Custom Cards */
+        .card-custom {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-custom:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            gap: 1rem;
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+
+        .progress-bar-custom {
+            height: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="pms-wrapper">
+            <!-- Sidebar -->
+            <aside class="pms-sidebar">
+                <div class="brand-header">
+                    <div class="brand-icon"><i class="bi bi-kanban"></i></div>
+                    <span>PMS Pro</span>
+                </div>
+
+                <div class="nav-group-label">Core</div>
+                <a href="@Url.Action("Index", "Dashboard")" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <i class="bi bi-grid-1x2"></i> Dashboard
+                </a>
+                <a href="@Url.Action("Index", "Projects")" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "active" : "")">
+                    <i class="bi bi-folder-check"></i> Projects
+                </a>
+                <a href="@Url.Action("Index", "Tasks")" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tasks" ? "active" : "")">
+                    <i class="bi bi-check2-square"></i> Tasks
+                </a>
+                <a href="@Url.Action("Index", "Notifications")" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Notifications" ? "active" : "")">
+                    <i class="bi bi-bell"></i> Notifications
+                </a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="nav-group-label">Administration</div>
+                    <a href="@Url.Action("Index", "Users")" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Users" ? "active" : "")">
+                        <i class="bi bi-people"></i> Manage Users
+                    </a>
+                    <a href="@Url.Action("Index", "Departments")" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Departments" ? "active" : "")">
+                        <i class="bi bi-building"></i> Departments
+                    </a>
+                    <a href="@Url.Action("Index", "SystemSettings")" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SystemSettings" ? "active" : "")">
+                        <i class="bi bi-sliders"></i> System Settings
+                    </a>
+                }
+
+                <div class="mt-auto p-3 border-top border-secondary border-opacity-25">
+                    <div class="d-flex align-items-center justify-content-between text-white-50">
+                        <small>Logged in as</small>
+                        <span class="role-badge @(User.IsInRole("Admin") ? "role-badge-admin" : User.IsInRole("ProjectManager") ? "role-badge-pm" : "role-badge-user")">
+                            @(User.IsInRole("Admin") ? "Admin" : User.IsInRole("ProjectManager") ? "Project Manager" : "User")
+                        </span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Workspace -->
+            <main class="pms-main">
+                <!-- Top Navigation Header -->
+                <header class="pms-topbar">
+                    <h5 class="m-0 fw-semibold text-secondary">@ViewBag.Title</h5>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="@Url.Action("Profile", "Account")" class="text-decoration-none text-dark fw-medium d-flex align-items-center gap-2">
+                            <i class="bi bi-person-circle fs-4 text-primary"></i>
+                            <span>@User.Identity.GetUserName()</span>
+                        </a>
+
+                        <form action="@Url.Action("Logout", "Account")" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </header>
+
+                <!-- Page Content Area -->
+                <div class="pms-content">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+    }
+    else
+    {
+        <!-- Full Page Container for Unauthenticated Views -->
+        <div class="min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light">
+            @RenderBody()
+        </div>
+    }
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
