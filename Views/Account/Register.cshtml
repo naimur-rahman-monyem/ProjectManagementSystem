@@ -1,183 +1,1334 @@
 @model ProjectManagementSystem.Models.ViewModels.RegisterViewModel
+
 @{
     ViewBag.Title = "Create Account";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="card card-custom p-4 p-md-5 shadow-lg border-0" style="max-width: 480px; width: 100%; border-radius: 16px;">
-    <div class="text-center mb-4">
-        <div class="brand-icon mx-auto mb-3" style="width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #4f46e5); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.75rem; box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);">
-            <i class="bi bi-person-plus"></i>
-        </div>
-        <h3 class="fw-bold text-dark mb-1">Create an Account</h3>
-        <p class="text-muted small">Register with your email and password</p>
-    </div>
+<style>
 
-    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger p-2 small border-0 mb-3" })
+   
 
-        <div class="row g-2 mb-3">
-            <div class="col-6">
-                @Html.LabelFor(m => m.FirstName, new { @class = "form-label fw-semibold small text-secondary" })
-                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control bg-light", placeholder = "First Name" })
-                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger small" })
-            </div>
-            <div class="col-6">
-                @Html.LabelFor(m => m.LastName, new { @class = "form-label fw-semibold small text-secondary" })
-                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control bg-light", placeholder = "Last Name" })
-                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger small" })
-            </div>
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(m => m.Email, new { @class = "form-label fw-semibold small text-secondary" })
-            <div class="input-group">
-                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control bg-light border-start-0", placeholder = "name@company.com" })
-            </div>
-            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
-        </div>
-
-        <!-- Password -->
-        <div class="mb-3">
-            @Html.LabelFor(m => m.Password, new
-            {
-                @class = "form-label fw-semibold small text-secondary"
-            })
-
-            <div class="input-group">
-
-                <span class="input-group-text bg-light border-end-0 text-muted">
-                    <i class="bi bi-lock"></i>
-                </span>
-
-                @Html.PasswordFor(m => m.Password, new
-                {
-                    @class = "form-control bg-light border-start-0 border-end-0",
-                    id = "PasswordInput",
-                    placeholder = "Enter your password"
-                })
-
-                <button type="button"
-                        class="btn btn-light border border-start-0"
-                        id="togglePassword"
-                        title="Show password">
-
-                    <i class="bi bi-eye" id="passwordIcon"></i>
-
-                </button>
-
-            </div>
-
-            @Html.ValidationMessageFor(m => m.Password, "",
-                    new { @class = "text-danger small" })
-        </div>
-
-
-        <!-- Confirm Password -->
-        <div class="mb-4">
-            @Html.LabelFor(m => m.ConfirmPassword, new
-            {
-                @class = "form-label fw-semibold small text-secondary"
-            })
-
-            <div class="input-group">
-
-                <span class="input-group-text bg-light border-end-0 text-muted">
-                    <i class="bi bi-shield-check"></i>
-                </span>
-
-                @Html.PasswordFor(m => m.ConfirmPassword, new
-                {
-                    @class = "form-control bg-light border-start-0 border-end-0",
-                    id = "ConfirmPasswordInput",
-                    placeholder = "Confirm your password"
-                })
-
-                <button type="button"
-                        class="btn btn-light border border-start-0"
-                        id="toggleConfirmPassword"
-                        title="Show password">
-
-                    <i class="bi bi-eye" id="confirmPasswordIcon"></i>
-
-                </button>
-
-            </div>
-
-            @Html.ValidationMessageFor(m => m.ConfirmPassword, "",
-                    new { @class = "text-danger small" })
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold rounded-3 mb-3" style="background: linear-gradient(135deg, #6366f1, #4f46e5); border: none;">
-            Register Account <i class="bi bi-arrow-right ms-1"></i>
-        </button>
+    .register-page {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 15px;
+        background: radial-gradient( circle at 10% 20%, rgba(99, 102, 241, 0.15), transparent 30% ), radial-gradient( circle at 90% 80%, rgba(79, 70, 229, 0.12), transparent 30% ), #f8f9fc;
     }
 
-    <div class="mt-3 text-center">
-        <span class="text-muted small">Already have an account? </span>
-        <a href="@Url.Action("Login", "Account")" class="fw-semibold text-primary text-decoration-none small">Sign in here</a>
+
+    .register-wrapper {
+        width: 100%;
+        max-width: 1080px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 25px 70px rgba(31, 41, 55, 0.14);
+    }
+
+
+    
+
+    .register-brand-section {
+        position: relative;
+        overflow: hidden;
+        padding: 55px;
+        color: white;
+        background: linear-gradient( 135deg, #6366f1 0%, #4f46e5 55%, #3730a3 100% );
+    }
+
+
+        .register-brand-section::before {
+            content: "";
+            position: absolute;
+            width: 330px;
+            height: 330px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            top: -130px;
+            right: -100px;
+        }
+
+
+        .register-brand-section::after {
+            content: "";
+            position: absolute;
+            width: 270px;
+            height: 270px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            bottom: -130px;
+            left: -110px;
+        }
+
+
+    .register-brand-content {
+        position: relative;
+        z-index: 2;
+    }
+
+
+  
+
+    .register-logo {
+        width: 62px;
+        height: 62px;
+        border-radius: 17px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.22);
+        font-size: 28px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+
+    .register-brand-title {
+        font-size: 2.45rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 18px;
+    }
+
+
+    .register-brand-description {
+        color: rgba(255,255,255,0.82);
+        font-size: 1rem;
+        line-height: 1.7;
+        max-width: 430px;
+    }
+
+
+
+
+    .register-features {
+        margin-top: 40px;
+    }
+
+
+    .register-feature {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+
+    .register-feature-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.10);
+        font-size: 18px;
+    }
+
+
+    .register-feature strong {
+        font-size: 14px;
+    }
+
+
+    .register-feature small {
+        color: rgba(255,255,255,0.70);
+    }
+
+
+    /* =========================================
+       FLOATING CARD
+       ========================================= */
+
+    .register-floating-card {
+        position: absolute;
+        z-index: 3;
+        right: 35px;
+        bottom: 45px;
+        width: 210px;
+        padding: 15px;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.96);
+        color: #1f2937;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+
+
+    .register-floating-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eef2ff;
+        color: #4f46e5;
+        font-size: 18px;
+    }
+
+
+
+
+    .register-form-section {
+        padding: 45px 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .register-form {
+        width: 100%;
+        max-width: 400px;
+    }
+
+
+    .register-heading {
+        margin-bottom: 25px;
+    }
+
+
+        .register-heading h2 {
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 7px;
+        }
+
+
+        .register-heading p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+
+    .register-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 7px;
+    }
+
+
+
+    .register-input-group {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+
+        .register-input-group .input-group-text {
+            background: #f8fafc;
+            border-color: #e5e7eb;
+            color: #6b7280;
+            padding-left: 14px;
+        }
+
+
+        .register-input-group .form-control {
+            height: 47px;
+            background: #f8fafc;
+            border-color: #e5e7eb;
+            box-shadow: none;
+        }
+
+
+            .register-input-group .form-control:focus {
+                background: #ffffff;
+                border-color: #6366f1;
+                box-shadow: 0 0 0 3px rgba(99,102,241,0.10);
+            }
+
+
+    /* =========================================
+       PASSWORD BUTTON
+       ========================================= */
+
+    .register-password-toggle {
+        height: 47px;
+        background: #f8fafc;
+        border-color: #e5e7eb;
+        color: #6b7280;
+    }
+
+
+        .register-password-toggle:hover {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+
+    /* =========================================
+       PASSWORD STRENGTH
+       ========================================= */
+
+    .password-strength {
+        height: 5px;
+        background: #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+
+    .password-strength-bar {
+        height: 100%;
+        width: 0%;
+        border-radius: 10px;
+        transition: width .25s ease;
+    }
+
+
+    .password-strength-text {
+        font-size: 11px;
+        margin-top: 5px;
+        color: #9ca3af;
+    }
+
+
+
+    .password-requirements {
+        background: #f8fafc;
+        border: 1px solid #eef0f4;
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-top: 10px;
+    }
+
+
+    .password-requirement {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-bottom: 3px;
+    }
+
+
+        .password-requirement:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .password-requirement i {
+            margin-right: 5px;
+        }
+
+
+
+
+    .register-button {
+        height: 50px;
+        border: none;
+        border-radius: 11px;
+        font-weight: 600;
+        background: linear-gradient( 135deg, #6366f1, #4f46e5 );
+        box-shadow: 0 8px 20px rgba(79,70,229,0.25);
+        transition: all .2s ease;
+    }
+
+
+        .register-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 25px rgba(79,70,229,0.32);
+            background: linear-gradient( 135deg, #4f46e5, #4338ca );
+        }
+
+
+
+    .login-link {
+        color: #4f46e5;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+
+
+    .home-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        border-radius: 50px;
+        padding: 8px 15px;
+        font-size: 13px;
+        font-weight: 600;
+        background: rgba(255,255,255,0.92);
+        color: #4f46e5;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        text-decoration: none;
+    }
+
+
+        .home-button:hover {
+            background: #ffffff;
+            color: #3730a3;
+        }
+
+
+    @@media (max-width: 900px) {
+
+        .register-wrapper {
+            grid-template-columns: 1fr;
+            max-width: 520px;
+        }
+
+
+        .register-brand-section {
+            padding: 45px;
+            min-height: 390px;
+        }
+
+
+        .register-form-section {
+            padding: 45px 35px;
+        }
+
+
+        .register-floating-card {
+            display: none;
+        }
+    }
+
+
+    @@media (max-width: 500px) {
+
+        .register-page {
+            padding: 20px 10px;
+        }
+
+
+        .register-brand-section {
+            padding: 35px 25px;
+            min-height: 330px;
+        }
+
+
+        .register-form-section {
+            padding: 35px 22px;
+        }
+
+
+        .register-brand-title {
+            font-size: 1.85rem;
+        }
+
+
+        .register-features {
+            display: none;
+        }
+    }
+</style>
+
+
+
+
+<div class="register-page">
+
+    <div class="register-wrapper">
+
+
+
+
+        <div class="register-brand-section">
+
+            <!-- Home Button -->
+
+            <a href="@Url.Action("Index", "Home")"
+               class="home-button">
+
+                <i class="bi bi-house-door me-1"></i>
+
+                Home
+
+            </a>
+
+
+            <div class="register-brand-content">
+
+
+                <!-- Logo -->
+
+                <div class="register-logo">
+
+                    <i class="bi bi-kanban"></i>
+
+                </div>
+
+
+                <!-- Heading -->
+
+                <h1 class="register-brand-title">
+
+                    Build Better.<br />
+
+                    Work Smarter.
+
+                </h1>
+
+
+                <p class="register-brand-description">
+
+                    Create your account and start managing
+                    projects, tasks, deadlines, and team
+                    collaboration from one centralized platform.
+
+                </p>
+
+
+                <!-- Features -->
+
+                <div class="register-features">
+
+
+                    <!-- Feature 1 -->
+
+                    <div class="register-feature">
+
+                        <div class="register-feature-icon">
+
+                            <i class="bi bi-kanban"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Organize Projects
+                            </strong>
+
+                            <div>
+                                <small>
+                                    Keep every project organized
+                                </small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Feature 2 -->
+
+                    <div class="register-feature">
+
+                        <div class="register-feature-icon">
+
+                            <i class="bi bi-list-check"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Manage Tasks
+                            </strong>
+
+                            <div>
+                                <small>
+                                    Track tasks and deadlines
+                                </small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Feature 3 -->
+
+                    <div class="register-feature">
+
+                        <div class="register-feature-icon">
+
+                            <i class="bi bi-people"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Collaborate With Teams
+                            </strong>
+
+                            <div>
+                                <small>
+                                    Work together efficiently
+                                </small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- Floating Card -->
+
+            <div class="register-floating-card">
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <div class="register-floating-icon">
+
+                        <i class="bi bi-person-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="fw-bold small">
+
+                            Account Ready
+
+                        </div>
+
+                        <div class="text-muted"
+                             style="font-size:11px;">
+
+                            Start managing your work
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+
+                    <span class="badge bg-success-subtle text-success">
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        Secure Registration
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- RIGHT FORM -->
+        <!-- ===================================== -->
+
+        <div class="register-form-section">
+
+            <div class="register-form">
+
+
+                <!-- Heading -->
+
+                <div class="register-heading">
+
+                    <h2>
+                        Create Account
+                    </h2>
+
+                    <p class="mb-0">
+                        Register your account to get started.
+                    </p>
+
+                </div>
+
+
+                <!-- FORM -->
+
+                @using (Html.BeginForm(
+                    "Register",
+                    "Account",
+                    FormMethod.Post,
+                    new { role = "form" }))
+                {
+
+                    @Html.AntiForgeryToken()
+
+
+                    @Html.ValidationSummary(
+                        true,
+                        "",
+                        new
+                        {
+                            @class =
+                                "alert alert-danger p-2 small border-0 mb-3"
+                        })
+
+
+                    <!-- ================================= -->
+                    <!-- NAME -->
+                    <!-- ================================= -->
+
+                    <div class="row g-2 mb-3">
+
+                        <!-- First Name -->
+
+                        <div class="col-6">
+
+                            @Html.LabelFor(
+                                m => m.FirstName,
+                                new
+                                {
+                                    @class = "register-label"
+                                })
+
+                            @Html.TextBoxFor(
+                                m => m.FirstName,
+                                new
+                                {
+                                    @class =
+                                        "form-control bg-light",
+                                    placeholder =
+                                        "First Name",
+                                    autocomplete =
+                                        "given-name"
+                                })
+
+                            @Html.ValidationMessageFor(
+                                m => m.FirstName,
+                                "",
+                                new
+                                {
+                                    @class =
+                                        "text-danger small"
+                                })
+
+                        </div>
+
+
+                        <!-- Last Name -->
+
+                        <div class="col-6">
+
+                            @Html.LabelFor(
+                                m => m.LastName,
+                                new
+                                {
+                                    @class = "register-label"
+                                })
+
+                            @Html.TextBoxFor(
+                                m => m.LastName,
+                                new
+                                {
+                                    @class =
+                                        "form-control bg-light",
+                                    placeholder =
+                                        "Last Name",
+                                    autocomplete =
+                                        "family-name"
+                                })
+
+                            @Html.ValidationMessageFor(
+                                m => m.LastName,
+                                "",
+                                new
+                                {
+                                    @class =
+                                        "text-danger small"
+                                })
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- EMAIL -->
+                    <!-- ================================= -->
+
+                    <div class="mb-3">
+
+                        @Html.LabelFor(
+                            m => m.Email,
+                            new
+                            {
+                                @class = "register-label"
+                            })
+
+                        <div class="input-group register-input-group">
+
+                            <span class="input-group-text border-end-0">
+
+                                <i class="bi bi-envelope"></i>
+
+                            </span>
+
+                            @Html.TextBoxFor(
+                                m => m.Email,
+                                new
+                                {
+                                    @class =
+                                        "form-control border-start-0",
+                                    placeholder =
+                                        "name@company.com",
+                                    autocomplete =
+                                        "email"
+                                })
+
+                        </div>
+
+                        @Html.ValidationMessageFor(
+                            m => m.Email,
+                            "",
+                            new
+                            {
+                                @class =
+                                    "text-danger small"
+                            })
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- PASSWORD -->
+                    <!-- ================================= -->
+
+                    <div class="mb-3">
+
+                        @Html.LabelFor(
+                            m => m.Password,
+                            new
+                            {
+                                @class = "register-label"
+                            })
+
+
+                        <div class="input-group register-input-group">
+
+                            <span class="input-group-text border-end-0">
+
+                                <i class="bi bi-lock"></i>
+
+                            </span>
+
+
+                            @Html.PasswordFor(
+                                m => m.Password,
+                                new
+                                {
+                                    @class =
+                                        "form-control border-start-0 border-end-0",
+                                    id =
+                                        "PasswordInput",
+                                    placeholder =
+                                        "Create a password",
+                                    autocomplete =
+                                        "new-password"
+                                })
+
+
+                            <button type="button"
+                                    class="btn register-password-toggle border-start-0"
+                                    id="togglePassword"
+                                    title="Show password">
+
+                                <i class="bi bi-eye"
+                                   id="passwordIcon"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- Strength -->
+
+                        <div class="password-strength">
+
+                            <div id="passwordStrengthBar"
+                                 class="password-strength-bar">
+                            </div>
+
+                        </div>
+
+
+                        <div id="passwordStrengthText"
+                             class="password-strength-text">
+
+                            Password strength
+
+                        </div>
+
+
+                        <!-- Requirements -->
+
+                        <div class="password-requirements">
+
+                            <div class="password-requirement"
+                                 id="lengthRequirement">
+
+                                <i class="bi bi-circle"></i>
+
+                                At least 6 characters
+
+                            </div>
+
+                            <div class="password-requirement"
+                                 id="numberRequirement">
+
+                                <i class="bi bi-circle"></i>
+
+                                Contains a number
+
+                            </div>
+
+                            <div class="password-requirement"
+                                 id="uppercaseRequirement">
+
+                                <i class="bi bi-circle"></i>
+
+                                Contains an uppercase letter
+
+                            </div>
+
+                        </div>
+
+
+                        @Html.ValidationMessageFor(
+                            m => m.Password,
+                            "",
+                            new
+                            {
+                                @class =
+                                    "text-danger small"
+                            })
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- CONFIRM PASSWORD -->
+                    <!-- ================================= -->
+
+                    <div class="mb-4">
+
+                        @Html.LabelFor(
+                            m => m.ConfirmPassword,
+                            new
+                            {
+                                @class = "register-label"
+                            })
+
+
+                        <div class="input-group register-input-group">
+
+                            <span class="input-group-text border-end-0">
+
+                                <i class="bi bi-shield-check"></i>
+
+                            </span>
+
+
+                            @Html.PasswordFor(
+                                m => m.ConfirmPassword,
+                                new
+                                {
+                                    @class =
+                                        "form-control border-start-0 border-end-0",
+                                    id =
+                                        "ConfirmPasswordInput",
+                                    placeholder =
+                                        "Confirm your password",
+                                    autocomplete =
+                                        "new-password"
+                                })
+
+
+                            <button type="button"
+                                    class="btn register-password-toggle border-start-0"
+                                    id="toggleConfirmPassword"
+                                    title="Show password">
+
+                                <i class="bi bi-eye"
+                                   id="confirmPasswordIcon"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        @Html.ValidationMessageFor(
+                            m => m.ConfirmPassword,
+                            "",
+                            new
+                            {
+                                @class =
+                                    "text-danger small"
+                            })
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- REGISTER BUTTON -->
+                    <!-- ================================= -->
+
+                    <button type="submit"
+                            class="btn btn-primary register-button w-100">
+
+                        Create Account
+
+                        <i class="bi bi-arrow-right ms-1"></i>
+
+                    </button>
+
+                }
+
+
+                <!-- ================================= -->
+                <!-- LOGIN LINK -->
+                <!-- ================================= -->
+
+                <div class="text-center mt-4">
+
+                    <span class="text-muted small">
+
+                        Already have an account?
+
+                    </span>
+
+                    <a href="@Url.Action("Login", "Account")"
+                       class="login-link small ms-1">
+
+                        Sign in here
+
+                    </a>
+
+                </div>
+
+
+                <!-- Security -->
+
+                <div class="text-center mt-3">
+
+                    <small class="text-muted"
+                           style="font-size:11px;">
+
+                        <i class="bi bi-shield-check me-1"></i>
+
+                        Your account is protected with secure authentication
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </div>
+
+
+
+
 <script>
+
     document.addEventListener("DOMContentLoaded", function () {
 
-        // Password
-        const passwordInput = document.getElementById("PasswordInput");
-        const togglePassword = document.getElementById("togglePassword");
-        const passwordIcon = document.getElementById("passwordIcon");
 
-        togglePassword.addEventListener("click", function () {
+      
 
-            const isPassword = passwordInput.type === "password";
+        const passwordInput =
+            document.getElementById("PasswordInput");
 
-            passwordInput.type = isPassword ? "text" : "password";
+        const togglePassword =
+            document.getElementById("togglePassword");
 
-            passwordIcon.classList.toggle("bi-eye", !isPassword);
-            passwordIcon.classList.toggle("bi-eye-slash", isPassword);
+        const passwordIcon =
+            document.getElementById("passwordIcon");
 
-            togglePassword.setAttribute(
-                "title",
-                isPassword ? "Hide password" : "Show password"
+
+        if (passwordInput &&
+            togglePassword &&
+            passwordIcon) {
+
+            togglePassword.addEventListener(
+                "click",
+                function () {
+
+                    const isPassword =
+                        passwordInput.type === "password";
+
+
+                    passwordInput.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+
+                    passwordIcon.classList.toggle(
+                        "bi-eye",
+                        !isPassword
+                    );
+
+
+                    passwordIcon.classList.toggle(
+                        "bi-eye-slash",
+                        isPassword
+                    );
+
+
+                    togglePassword.setAttribute(
+                        "title",
+                        isPassword
+                            ? "Hide password"
+                            : "Show password"
+                    );
+
+                }
             );
-        });
+
+        }
 
 
-        // Confirm Password
+
         const confirmPasswordInput =
-            document.getElementById("ConfirmPasswordInput");
+            document.getElementById(
+                "ConfirmPasswordInput"
+            );
+
 
         const toggleConfirmPassword =
-            document.getElementById("toggleConfirmPassword");
+            document.getElementById(
+                "toggleConfirmPassword"
+            );
+
 
         const confirmPasswordIcon =
-            document.getElementById("confirmPasswordIcon");
-
-        toggleConfirmPassword.addEventListener("click", function () {
-
-            const isPassword =
-                confirmPasswordInput.type === "password";
-
-            confirmPasswordInput.type =
-                isPassword ? "text" : "password";
-
-            confirmPasswordIcon.classList.toggle(
-                "bi-eye",
-                !isPassword
+            document.getElementById(
+                "confirmPasswordIcon"
             );
 
-            confirmPasswordIcon.classList.toggle(
-                "bi-eye-slash",
-                isPassword
+
+        if (confirmPasswordInput &&
+            toggleConfirmPassword &&
+            confirmPasswordIcon) {
+
+            toggleConfirmPassword.addEventListener(
+                "click",
+                function () {
+
+                    const isPassword =
+                        confirmPasswordInput.type ===
+                        "password";
+
+
+                    confirmPasswordInput.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+
+                    confirmPasswordIcon.classList.toggle(
+                        "bi-eye",
+                        !isPassword
+                    );
+
+
+                    confirmPasswordIcon.classList.toggle(
+                        "bi-eye-slash",
+                        isPassword
+                    );
+
+
+                    toggleConfirmPassword.setAttribute(
+                        "title",
+                        isPassword
+                            ? "Hide password"
+                            : "Show password"
+                    );
+
+                }
             );
 
-            toggleConfirmPassword.setAttribute(
-                "title",
-                isPassword ? "Hide password" : "Show password"
+        }
+
+
+
+
+        const strengthBar =
+            document.getElementById(
+                "passwordStrengthBar"
             );
-        });
+
+
+        const strengthText =
+            document.getElementById(
+                "passwordStrengthText"
+            );
+
+
+        const lengthRequirement =
+            document.getElementById(
+                "lengthRequirement"
+            );
+
+
+        const numberRequirement =
+            document.getElementById(
+                "numberRequirement"
+            );
+
+
+        const uppercaseRequirement =
+            document.getElementById(
+                "uppercaseRequirement"
+            );
+
+
+        passwordInput.addEventListener(
+            "input",
+            function () {
+
+                const password =
+                    passwordInput.value;
+
+
+                let score = 0;
+
+
+                /* Length */
+
+                if (password.length >= 6) {
+
+                    score++;
+
+                    lengthRequirement
+                        .querySelector("i")
+                        .className =
+                        "bi bi-check-circle-fill";
+
+                    lengthRequirement.style.color =
+                        "#198754";
+
+                }
+                else {
+
+                    lengthRequirement
+                        .querySelector("i")
+                        .className =
+                        "bi bi-circle";
+
+                    lengthRequirement.style.color =
+                        "#9ca3af";
+
+                }
+
+
+                /* Number */
+
+                if (/\d/.test(password)) {
+
+                    score++;
+
+                    numberRequirement
+                        .querySelector("i")
+                        .className =
+                        "bi bi-check-circle-fill";
+
+                    numberRequirement.style.color =
+                        "#198754";
+
+                }
+                else {
+
+                    numberRequirement
+                        .querySelector("i")
+                        .className =
+                        "bi bi-circle";
+
+                    numberRequirement.style.color =
+                        "#9ca3af";
+
+                }
+
+
+                /* Uppercase */
+
+                if (/[A-Z]/.test(password)) {
+
+                    score++;
+
+                    uppercaseRequirement
+                        .querySelector("i")
+                        .className =
+                        "bi bi-check-circle-fill";
+
+                    uppercaseRequirement.style.color =
+                        "#198754";
+
+                }
+                else {
+
+                    uppercaseRequirement
+                        .querySelector("i")
+                        .className =
+                        "bi bi-circle";
+
+                    uppercaseRequirement.style.color =
+                        "#9ca3af";
+
+                }
+
+
+                /* Strength */
+
+                if (password.length === 0) {
+
+                    strengthBar.style.width = "0%";
+
+                    strengthText.innerText =
+                        "Password strength";
+
+                }
+                else if (score === 1) {
+
+                    strengthBar.style.width = "33%";
+
+                    strengthText.innerText =
+                        "Weak password";
+
+                }
+                else if (score === 2) {
+
+                    strengthBar.style.width = "66%";
+
+                    strengthText.innerText =
+                        "Medium password";
+
+                }
+                else {
+
+                    strengthBar.style.width = "100%";
+
+                    strengthText.innerText =
+                        "Strong password";
+
+                }
+
+            }
+        );
 
     });
+
 </script>
